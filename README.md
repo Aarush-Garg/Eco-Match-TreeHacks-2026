@@ -1,18 +1,18 @@
-# 🌍 Climate-Tech AI Chatbot
+# Eco-Match (Climate-Tech Career Counsellor Platform)
 
 ## Features
 
-- **🤖 AI-Powered**: Uses Google Gemini Pro (free tier) for intelligent responses
-- **📚 Climate-Tech Expertise**: Specialized knowledge across 6 key sectors:
+- ** AI-Powered**: Uses Google Gemini Pro for intelligent responses
+- ** Climate-Tech Expertise**: Specialized knowledge across 6 key sectors:
   - Buildings (heat pumps, smart buildings, sustainable materials)
   - Manufacturing (green hydrogen, industrial electrification)
   - Transportation (EVs, hydrogen fuel cells, sustainable aviation)
   - Food, Agriculture & Nature (methane reduction, regenerative farming)
   - Electricity (renewables, energy storage, grid modernization)
   - GHG Removal (direct air capture, carbon sequestration)
-- **🔍 Smart Context Retrieval (RAG)**: Automatically injects relevant climate-tech context based on your queries
-- **🎯 Keyword Filtering**: Detects and emphasizes climate-tech topics in conversations
-- **💬 Interactive UI**: Clean, responsive chat interface with typing indicators and suggestions
+- ** Smart Context Retrieval (RAG)**: Automatically injects relevant climate-tech context based on your queries
+- ** Keyword Filtering**: Detects and emphasizes climate-tech topics in conversations
+- ** Interactive UI**: Clean, responsive chat interface with typing indicators and suggestions
 
 ## Tech Stack
 
@@ -158,11 +158,6 @@ Check server health status.
 - Make sure Node.js 18+ is installed: `node --version`
 - Delete `node_modules` and run `npm install` again
 - Check if port 3000 is available (or change PORT in `.env`)
-
-### Chat not responding
-- Check browser console for errors (F12 → Console)
-- Verify the server is running: visit [http://localhost:3000/api/health](http://localhost:3000/api/health)
-- Check server terminal for error messages
 
 ## Customization
 
