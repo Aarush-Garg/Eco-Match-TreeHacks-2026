@@ -1,7 +1,5 @@
 # 🌍 Climate-Tech AI Chatbot
 
-A specialized chatbot powered by Google Gemini API that provides expert knowledge on climate technologies, decarbonization strategies, and clean energy solutions. The chatbot is tailored to climate-tech domains using data from [climatetechmap.com](https://climatetechmap.com).
-
 ## Features
 
 - **🤖 AI-Powered**: Uses Google Gemini Pro (free tier) for intelligent responses
@@ -24,7 +22,6 @@ A specialized chatbot powered by Google Gemini API that provides expert knowledg
 - **Data**: JSON-based knowledge base with comprehensive climate-tech taxonomy
 
 ## Prerequisites
-
 - Node.js 18.x or higher
 - A free Google Gemini API key ([Get one here](https://aistudio.google.com/app/apikey))
 
@@ -219,5 +216,3 @@ For issues or questions, please check:
 3. Browser console (F12)
 
 ---
-
-**Made with 🌱 for a sustainable future**
