@@ -50,22 +50,10 @@
 
 ## Usage
 
-1. **Start the server**
-   ```bash
-   npm start
-   ```
+1. **Open your browser**
+   - Navigate to https://eco-match-treehacks-2026.vercel.app/
 
-   You should see:
-   ```
-   🌍 Climate-Tech Chatbot server running on http://localhost:3000
-   📚 Loaded 6 climate-tech sectors
-   🔑 API Key configured: Yes
-   ```
-
-2. **Open your browser**
-   - Navigate to [http://localhost:3000](http://localhost:3000)
-
-3. **Start chatting!**
+2. **Start chatting!**
    - Try asking about:
      - "What are heat pumps and how do they work?"
      - "How can we decarbonize transportation?"
@@ -202,7 +190,7 @@ Edit `styles.css` to customize:
 
 - **Climate Data**: [Climate Tech Map](https://climatetechmap.com) by Breakthrough Energy, Stanford, and McKinsey
 - **AI**: Google Gemini API
-- **Built for**: TreeHacks V2
+- **Built for**: TreeHacks 2026
 
 ## License
 
