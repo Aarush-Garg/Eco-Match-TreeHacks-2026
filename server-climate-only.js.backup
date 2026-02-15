@@ -1,0 +1,297 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent';
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(__dirname));
+
+// Load climate knowledge base
+let climateKnowledge;
+try {
+  const knowledgePath = path.join(__dirname, 'climate-knowledge.json');
+  const knowledgeData = fs.readFileSync(knowledgePath, 'utf8');
+  climateKnowledge = JSON.parse(knowledgeData);
+  console.log('Climate knowledge base loaded successfully');
+} catch (error) {
+  console.error('Error loading climate knowledge base:', error);
+  process.exit(1);
+}
+
+/**
+ * Extract climate-tech keywords from user query
+ * @param {string} query - User's input query
+ * @returns {Array} - Array of matched keyword categories
+ */
+function extractKeywords(query) {
+  const lowercaseQuery = query.toLowerCase();
+  const matches = [];
+
+  // Check each keyword category
+  for (const [category, keywords] of Object.entries(climateKnowledge.keywords)) {
+    for (const keyword of keywords) {
+      if (lowercaseQuery.includes(keyword.toLowerCase())) {
+        matches.push(category);
+        break; // Only add category once
+      }
+    }
+  }
+
+  // Check sector names
+  for (const [sectorKey, sector] of Object.entries(climateKnowledge.sectors)) {
+    if (lowercaseQuery.includes(sector.name.toLowerCase())) {
+      matches.push(sectorKey);
+    }
+  }
+
+  return [...new Set(matches)]; // Remove duplicates
+}
+
+/**
+ * Retrieve relevant climate-tech context based on keywords
+ * @param {Array} keywords - Extracted keyword categories
+ * @returns {Object} - Relevant context from knowledge base
+ */
+function retrieveContext(keywords) {
+  const context = {
+    sectors: [],
+    technologies: [],
+    imperatives: [],
+    moonshots: []
+  };
+
+  // If no keywords matched, return general climate-tech overview
+  if (keywords.length === 0) {
+    context.sectors = Object.values(climateKnowledge.sectors).map(s => ({
+      name: s.name,
+      description: s.description
+    }));
+    return context;
+  }
+
+  // Retrieve relevant sectors
+  for (const keyword of keywords) {
+    if (climateKnowledge.sectors[keyword]) {
+      context.sectors.push(climateKnowledge.sectors[keyword]);
+    }
+  }
+
+  // Retrieve related imperatives and moonshots (top 5 relevant ones)
+  const relevantImperatives = climateKnowledge.imperatives.filter(imp =>
+    keywords.some(kw => imp.toLowerCase().includes(kw.toLowerCase()))
+  ).slice(0, 5);
+
+  const relevantMoonshots = climateKnowledge.moonshots.filter(ms =>
+    keywords.some(kw => ms.toLowerCase().includes(kw.toLowerCase()))
+  ).slice(0, 3);
+
+  context.imperatives = relevantImperatives;
+  context.moonshots = relevantMoonshots;
+
+  return context;
+}
+
+/**
+ * Build system prompt with climate-tech expertise
+ * @param {Object} context - Retrieved context from knowledge base
+ * @param {string} userQuery - Original user query
+ * @returns {string} - Complete prompt for Gemini
+ */
+function buildPrompt(context, userQuery) {
+  let systemPrompt = `You are a climate-tech expert assistant with deep knowledge of decarbonization technologies, clean energy solutions, and climate innovation. Your expertise covers 6 primary sectors:
+
+1. **Buildings** - HVAC, heat pumps, smart buildings, sustainable materials
+2. **Manufacturing** - Green hydrogen, industrial electrification, clean cement/steel
+3. **Transportation** - EVs, hydrogen fuel cells, sustainable aviation fuels, maritime solutions
+4. **Food, Agriculture & Nature** - Methane reduction, regenerative farming, ecosystem restoration
+5. **Electricity** - Renewable energy, energy storage, grid modernization
+6. **GHG Removal** - Direct air capture, biochar, nature-based carbon removal
+
+When answering questions, prioritize information about:
+- **Innovation Imperatives**: Critical near-term climate solutions needed for net-zero
+- **Moonshots**: High-risk, high-reward breakthrough technologies
+- **Technology maturity**: Lab stage, Pilot stage, or Commercial readiness
+- **Emissions reduction** and **carbon sequestration** strategies
+
+`;
+
+  // Add specific context if available
+  if (context.sectors && context.sectors.length > 0) {
+    systemPrompt += '\n**Relevant Context for this Query:**\n\n';
+
+    context.sectors.forEach(sector => {
+      systemPrompt += `**${sector.name} Sector:**\n`;
+      systemPrompt += `${sector.description}\n`;
+      if (sector.technologies) {
+        systemPrompt += `Key technologies: ${sector.technologies.slice(0, 5).join(', ')}\n`;
+      }
+      if (sector.imperatives) {
+        systemPrompt += `Critical imperatives: ${sector.imperatives.slice(0, 3).join('; ')}\n`;
+      }
+      systemPrompt += '\n';
+    });
+  }
+
+  if (context.imperatives && context.imperatives.length > 0) {
+    systemPrompt += `**Relevant Innovation Imperatives:**\n`;
+    systemPrompt += context.imperatives.map(imp => `- ${imp}`).join('\n');
+    systemPrompt += '\n\n';
+  }
+
+  if (context.moonshots && context.moonshots.length > 0) {
+    systemPrompt += `**Relevant Moonshot Technologies:**\n`;
+    systemPrompt += context.moonshots.map(ms => `- ${ms}`).join('\n');
+    systemPrompt += '\n\n';
+  }
+
+  systemPrompt += `\nUser Question: ${userQuery}\n\n`;
+  systemPrompt += `Provide a comprehensive, accurate answer focused on climate-tech solutions. Be specific about technologies, their maturity levels, and real-world applications. If relevant, mention both near-term solutions (imperatives) and longer-term innovations (moonshots).`;
+
+  return systemPrompt;
+}
+
+/**
+ * Filter and enhance user query to emphasize climate-tech focus
+ * @param {string} query - Original user query
+ * @param {Array} keywords - Extracted keywords
+ * @returns {Object} - Filtered query and metadata
+ */
+function filterQuery(query, keywords) {
+  const lowercaseQuery = query.toLowerCase();
+
+  // Check if query is climate-tech related
+  const climateTerms = ['climate', 'carbon', 'emission', 'renewable', 'clean energy',
+                        'sustainability', 'decarbonization', 'net zero', 'greenhouse gas'];
+
+  const hasClimateTerm = climateTerms.some(term => lowercaseQuery.includes(term)) || keywords.length > 0;
+
+  // If query seems off-topic, redirect gently
+  if (!hasClimateTerm && query.length > 10) {
+    const offTopicTerms = ['weather', 'recipe', 'movie', 'game', 'sports'];
+    if (offTopicTerms.some(term => lowercaseQuery.includes(term))) {
+      return {
+        isOffTopic: true,
+        redirectMessage: `I'm a climate-tech specialist focused on decarbonization and clean energy solutions. While I can't help with that specific topic, I'd be happy to discuss climate technologies!
+
+For example, I can help you understand:
+- Clean energy technologies (solar, wind, batteries)
+- Decarbonization strategies for different sectors
+- Emerging climate innovations and moonshots
+- Carbon removal technologies
+
+Would you like to explore any climate-tech topics?`
+      };
+    }
+  }
+
+  return {
+    isOffTopic: false,
+    enhancedQuery: query
+  };
+}
+
+/**
+ * Main chat endpoint
+ */
+app.post('/api/chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message || message.trim().length === 0) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    // Extract keywords from query
+    const keywords = extractKeywords(message);
+    console.log('Extracted keywords:', keywords);
+
+    // Filter query for relevance
+    const filtered = filterQuery(message, keywords);
+
+    if (filtered.isOffTopic) {
+      return res.json({ response: filtered.redirectMessage });
+    }
+
+    // Retrieve relevant context (RAG)
+    const context = retrieveContext(keywords);
+    console.log('Retrieved context for sectors:', context.sectors.map(s => s.name));
+
+    // Build enhanced prompt
+    const prompt = buildPrompt(context, message);
+
+    // Call Gemini API v1 directly
+    const apiResponse = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }]
+      })
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      throw new Error(`Gemini API error: ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await apiResponse.json();
+    const text = data.candidates[0].content.parts[0].text;
+
+    res.json({
+      response: text,
+      metadata: {
+        keywords: keywords,
+        sectorsReferenced: context.sectors.map(s => s.name)
+      }
+    });
+
+  } catch (error) {
+    console.error('Error in /api/chat:', error);
+
+    // Handle specific Gemini API errors
+    if (error.message && error.message.includes('API key')) {
+      return res.status(401).json({
+        error: 'Invalid API key. Please check your GEMINI_API_KEY in .env file.'
+      });
+    }
+
+    if (error.message && error.message.includes('quota')) {
+      return res.status(429).json({
+        error: 'API quota exceeded. Please try again later.'
+      });
+    }
+
+    res.status(500).json({
+      error: 'An error occurred while processing your request. Please try again.'
+    });
+  }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Climate-Tech Chatbot API is running',
+    sectorsLoaded: Object.keys(climateKnowledge.sectors).length
+  });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`🌍 Climate-Tech Chatbot server running on http://localhost:${PORT}`);
+  console.log(`📚 Loaded ${Object.keys(climateKnowledge.sectors).length} climate-tech sectors`);
+  console.log(`🔑 API Key configured: ${process.env.GEMINI_API_KEY ? 'Yes' : 'No (Please add to .env file)'}`);
+});

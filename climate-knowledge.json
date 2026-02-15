@@ -1,0 +1,232 @@
+{
+  "sectors": {
+    "buildings": {
+      "name": "Buildings",
+      "description": "Technologies for decarbonizing buildings including HVAC systems, smart buildings, sustainable materials, and energy efficiency solutions.",
+      "technologies": [
+        "Heat pumps (air-source, ground-source, window)",
+        "Advanced HVAC systems",
+        "Building Energy Management Systems (BEMS)",
+        "Smart building controls",
+        "Green insulation",
+        "Recycled materials (bamboo, recycled steel, recycled concrete)",
+        "Embodied carbon reduction",
+        "Deconstruction and reuse",
+        "Green building materials"
+      ],
+      "imperatives": [
+        "Deploy heat pumps at scale",
+        "Reduce embodied carbon in construction",
+        "Retrofit existing buildings for energy efficiency",
+        "Smart building automation"
+      ],
+      "maturity": ["Lab", "Pilot", "Commercial"]
+    },
+    "manufacturing": {
+      "name": "Manufacturing",
+      "description": "Solutions for decarbonizing hard-to-abate industries including cement, steel, chemicals, and industrial processes.",
+      "technologies": [
+        "Green hydrogen production",
+        "Electrification of industrial heat",
+        "Carbon capture and storage (CCS)",
+        "Clean cement production",
+        "Direct reduced iron (DRI)",
+        "Chemical synthesis with electrified heat",
+        "Circular manufacturing",
+        "Process efficiency optimization"
+      ],
+      "imperatives": [
+        "Eliminate emissions from cement production",
+        "Decarbonize steel manufacturing",
+        "Industrial heat electrification",
+        "Green hydrogen for industry"
+      ],
+      "hard_to_abate": ["Cement & concrete", "Steel & iron", "Chemicals", "Extraction & mining"]
+    },
+    "transportation": {
+      "name": "Transportation",
+      "description": "Decarbonization solutions for land, air, and maritime transport including electric vehicles, hydrogen, and sustainable fuels.",
+      "technologies": [
+        "Electric vehicles (EVs)",
+        "Hydrogen fuel cells",
+        "Battery technology",
+        "Sustainable Aviation Fuel (SAF)",
+        "Electric propulsion for ships",
+        "Ammonia and methanol fuels",
+        "Charging infrastructure",
+        "Fuel cell trains"
+      ],
+      "imperatives": [
+        "Scale EV adoption for light-duty vehicles",
+        "Develop hydrogen infrastructure for heavy-duty transport",
+        "Commercialize sustainable aviation fuels",
+        "Electrify maritime shipping"
+      ],
+      "segments": ["Land transport", "Aviation", "Maritime/Shipping"]
+    },
+    "food_agriculture_nature": {
+      "name": "Food, Agriculture & Nature",
+      "description": "Solutions for reducing agricultural emissions, methane reduction, and nature-based climate solutions.",
+      "technologies": [
+        "Methane-reducing feed additives",
+        "Anaerobic digesters",
+        "Precision agriculture",
+        "Regenerative farming",
+        "Afforestation and reforestation",
+        "Peatland restoration",
+        "Mangrove restoration",
+        "Blue carbon (seagrasses, salt marshes)",
+        "Agroforestry",
+        "Alternative wetting and drying (AWD) for rice",
+        "Soil carbon sequestration"
+      ],
+      "imperatives": [
+        "Eliminate livestock methane emissions",
+        "Scale regenerative agriculture",
+        "Restore natural ecosystems at scale",
+        "Reduce agricultural N2O emissions"
+      ],
+      "potential": "Natural forest management: ~882 million tonnes/year; Ecosystem restoration: up to 3 gigatons/year"
+    },
+    "electricity": {
+      "name": "Electricity",
+      "description": "Renewable energy generation, energy storage, and grid modernization technologies.",
+      "technologies": [
+        "Solar photovoltaics",
+        "Wind energy (onshore, offshore)",
+        "Geothermal energy",
+        "Hydroelectric power",
+        "Battery Energy Storage Systems (BESS)",
+        "Long-duration energy storage",
+        "Smart grid systems",
+        "Grid modernization",
+        "Demand response",
+        "Virtual power plants",
+        "Grid flexibility services"
+      ],
+      "imperatives": [
+        "Deploy low-emissions generation at scale",
+        "Build grid-scale battery storage",
+        "Modernize electrical grids",
+        "Enable demand-side flexibility"
+      ],
+      "focus": "Low-emissions generation and grid flexibility"
+    },
+    "ghg_removal": {
+      "name": "GHG Removal",
+      "description": "Carbon dioxide removal technologies including both nature-based and technological approaches.",
+      "technologies": [
+        "Direct Air Capture (DAC)",
+        "Bioenergy with Carbon Capture & Storage (BECCS)",
+        "Biochar production",
+        "Enhanced weathering",
+        "Ocean-based CDR",
+        "Afforestation/Reforestation",
+        "Soil carbon sequestration",
+        "Blue carbon ecosystems"
+      ],
+      "imperatives": [
+        "Scale Direct Air Capture",
+        "Deploy multi-gigaton CDR by 2050",
+        "Commercialize nature-based CDR",
+        "Create carbon removal markets"
+      ],
+      "scale": "~150 DAC companies globally, ~36 operational plants; Multi-gigaton deployment needed by 2050+"
+    }
+  },
+  "keywords": {
+    "heat_pumps": ["heat pump", "hvac", "air-source", "ground-source", "heating", "cooling", "window heat pump"],
+    "carbon_capture": ["dac", "direct air capture", "ccs", "carbon capture", "carbon storage", "beccs", "carbon removal"],
+    "electric_vehicles": ["ev", "electric vehicle", "battery", "charging", "e-mobility", "electric car", "electric truck"],
+    "hydrogen": ["hydrogen", "green hydrogen", "fuel cell", "h2", "electrolyzer", "hydrogen infrastructure"],
+    "solar": ["solar", "photovoltaic", "pv", "solar panel", "solar energy", "concentrated solar"],
+    "wind": ["wind", "wind turbine", "wind farm", "offshore wind", "onshore wind", "wind energy"],
+    "battery": ["battery", "energy storage", "bess", "lithium", "battery storage", "grid storage"],
+    "cement": ["cement", "concrete", "clean cement", "low-carbon concrete", "embodied carbon"],
+    "steel": ["steel", "iron", "dri", "direct reduced iron", "green steel", "steel decarbonization"],
+    "aviation": ["aviation", "saf", "sustainable aviation fuel", "aircraft", "airline", "flight"],
+    "shipping": ["shipping", "maritime", "vessel", "ship", "marine", "ammonia fuel", "methanol fuel"],
+    "agriculture": ["agriculture", "farming", "crop", "soil", "regenerative", "precision agriculture"],
+    "methane": ["methane", "ch4", "livestock", "cattle", "enteric fermentation", "feed additive"],
+    "forest": ["forest", "afforestation", "reforestation", "deforestation", "tree", "forestry"],
+    "grid": ["grid", "smart grid", "transmission", "distribution", "grid modernization", "power grid"],
+    "buildings": ["building", "construction", "retrofit", "insulation", "smart building", "bems"],
+    "manufacturing": ["manufacturing", "industry", "industrial", "factory", "production"],
+    "emissions": ["emissions", "ghg", "greenhouse gas", "co2", "carbon dioxide", "decarbonization", "net zero"],
+    "energy_efficiency": ["efficiency", "energy efficiency", "optimization", "reduction"],
+    "circular_economy": ["circular", "recycling", "reuse", "waste", "circular economy"],
+    "nature_based": ["nature-based", "ecosystem", "restoration", "mangrove", "peatland", "blue carbon"],
+    "moonshot": ["fusion", "breakthrough", "innovation", "advanced", "next-generation"],
+    "climate_tech": ["climate tech", "clean tech", "climate technology", "climate solution"]
+  },
+  "imperatives": [
+    "Deploy heat pumps at scale",
+    "Eliminate livestock methane emissions",
+    "Clean cement production",
+    "Grid-scale battery storage",
+    "Green hydrogen production",
+    "Industrial heat electrification",
+    "Sustainable aviation fuels",
+    "Scale EV adoption",
+    "Direct Air Capture deployment",
+    "Restore natural ecosystems",
+    "Decarbonize steel manufacturing",
+    "Grid modernization",
+    "Regenerative agriculture at scale",
+    "Offshore wind deployment",
+    "Smart building automation",
+    "Circular manufacturing",
+    "Long-duration energy storage",
+    "Hydrogen infrastructure",
+    "Maritime decarbonization",
+    "Reduce embodied carbon in construction"
+  ],
+  "moonshots": [
+    "Fusion energy",
+    "Next-generation solar cells",
+    "Space-based solar power",
+    "Geologic hydrogen",
+    "Advanced carbon removal at scale",
+    "Breakthrough battery chemistries",
+    "Novel low-carbon manufacturing processes",
+    "Algae-based biofuels",
+    "Superconducting transmission",
+    "Quantum computing for climate modeling",
+    "Synthetic biology for carbon capture",
+    "Ocean alkalinity enhancement",
+    "Enhanced rock weathering at scale",
+    "Zero-carbon aviation",
+    "Autonomous renewable energy systems"
+  ],
+  "opportunity_areas": [
+    "HVAC & heat pumps",
+    "Grid flexibility from buildings",
+    "Building materials & embodied carbon",
+    "Deconstruction & reuse",
+    "Industrial heat electrification",
+    "Steel decarbonization",
+    "Cement production",
+    "Chemical manufacturing",
+    "Light-duty vehicle electrification",
+    "Heavy-duty transport solutions",
+    "Aviation decarbonization",
+    "Shipping decarbonization",
+    "Low-emissions electricity generation",
+    "Grid-scale storage",
+    "Grid modernization",
+    "Livestock emissions reduction",
+    "Soil carbon management",
+    "Forest restoration",
+    "Agricultural optimization",
+    "Direct air capture",
+    "Nature-based CDR",
+    "BECCS",
+    "Biochar & soil carbon"
+  ],
+  "maturity_levels": ["Lab", "Pilot", "Commercial"],
+  "development_stages": {
+    "lab": "Early research and development, proof of concept",
+    "pilot": "Demonstration projects and prototypes, early commercial testing",
+    "commercial": "Ready for deployment at scale, proven technology"
+  }
+}

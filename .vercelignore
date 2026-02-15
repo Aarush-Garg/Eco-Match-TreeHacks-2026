@@ -1,0 +1,14 @@
+node_modules
+*.log
+.env.local
+server.log
+test-*.js
+*.backup
+.claude
+parse-jobs.js
+list-models.js
+integrate-taxonomy.js
+FULL_TAXONOMY.py
+Structural Changelog.xlsx
+climate-knowledge.json
+climate-jobs-knowledge.json

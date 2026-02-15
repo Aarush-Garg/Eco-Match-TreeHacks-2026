@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Match | Find Your Climate Impact Career</title>
+    <meta name="description" content="Discover 1000+ climate-tech job opportunities across 80+ subsectors ranging from ocean carbon capture to insect-based alternative proteins. AI-powered career matching for renewable energy, carbon removal, and sustainable technology roles.">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Force scroll to top immediately - runs before page renders
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+        if (window.location.hash) {
+            history.replaceState(null, null, window.location.pathname);
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><img src="logo.png" alt="Eco-Match" style="height: 32px; vertical-align: middle; margin-right: 0.5rem;">Eco-Match</div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#resume-upload" class="nav-link">Resume Matcher</a>
+                <a href="#chatbot" class="nav-link">Climate Counselor</a>
+                <a href="#majors" class="nav-link">By Major</a>
+                <a href="#categories" class="nav-link">By Category</a>
+                <a href="#sectors" class="nav-link">Sectors</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <img src="logo.png" alt="Eco-Match Logo" style="height: 50px; margin-bottom: 0.5rem;">
+            <h1 class="hero-title">Launch Your Climate-Tech Career</h1>
+            <p class="hero-subtitle">Discover 1000+ opportunities across 80+ climate subsectors—ranging from ocean carbon capture to insect-based alternative proteins. Match your skills with roles that matter for our planet's future.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Climate Jobs</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Companies</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">80+</div>
+                    <div class="stat-label">Subsectors</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">41</div>
+                    <div class="stat-label">Skills Tracked</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Upload Section -->
+    <section id="resume-upload" class="resume-upload-section">
+        <div class="section-container">
+            <h2 class="section-title">Upload Your Resume</h2>
+            <p class="section-subtitle">Get personalized job recommendations based on your skills and experience</p>
+
+            <div class="upload-container">
+                <div class="upload-box">
+                    <div class="upload-icon">📎</div>
+                    <h3>Drop your resume here or click to browse</h3>
+                    <p>Supports PDF files (max 10MB)</p>
+                    <input type="file" id="resume-file-input" accept=".pdf" style="display: none;">
+                    <button id="browse-resume-btn" class="cta-button">Browse Files</button>
+                    <div id="file-name-display" style="margin-top: 1rem; display: none;">
+                        <p><strong>Selected:</strong> <span id="selected-file-name"></span></p>
+                        <button id="upload-resume-btn" class="cta-button" style="margin-top: 0.5rem;">Analyze Resume & Find Jobs</button>
+                    </div>
+                    <div id="upload-progress" style="margin-top: 1rem; display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Analyzing your resume...</p>
+                    </div>
+                </div>
+
+                <div id="resume-results" style="display: none; margin-top: 2rem;">
+                    <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>Your Profile</h3>
+                        <button id="reset-resume-btn" class="cta-button" style="background: #666; border-color: #666; font-size: 0.9rem; padding: 0.5rem 1rem;">Reset Resume</button>
+                    </div>
+                    <div id="resume-profile"></div>
+                    <div class="results-header" style="margin-top: 2rem;">
+                        <h3>Recommended Jobs Based on Your Resume</h3>
+                        <p id="resume-jobs-count"></p>
+                    </div>
+                    <div id="resume-jobs-table"></div>
+
+                    <!-- Bubble Diagram -->
+                    <div id="resume-bubble-diagram" style="margin-top: 2rem; background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: none;">
+                        <h3 style="text-align: center; margin-bottom: 1rem; color: #333;">Job Match Visualization</h3>
+                        <canvas id="bubble-canvas" width="800" height="700" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;"></canvas>
+                        <div id="bubble-legend" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem; font-size: 0.9rem;"></div>
+                    </div>
+                </div>
+
+                <!-- User Preferences - shown after initial results -->
+                <div id="resume-preferences" style="display: none; margin-top: 2rem; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 1.5rem; color: #333;">Refine Your Job Search</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Filter the jobs above by your sector interests and risk appetite</p>
+
+                    <!-- Sector Interests (Multi-select) -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">
+                            Areas of Interest (Select all that apply)
+                        </label>
+                        <div id="sector-checkboxes" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="Buildings"> Buildings
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="Manufacturing"> Manufacturing
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="Transportation"> Transportation
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="Food & Agriculture"> Food & Agriculture
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="Electricity"> Electricity
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="sector-interest" value="GHG Removal"> GHG Removal
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Risk Appetite (Dropdown) -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="risk-appetite" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">
+                            Risk Appetite
+                        </label>
+                        <select id="risk-appetite" class="preference-select">
+                            <option value="">All types (No preference)</option>
+                            <option value="moonshot">🚀 Moonshot - High risk, radical impact</option>
+                            <option value="essential">⚡ Essential Technologies - Medium risk, high impact</option>
+                            <option value="established">🏢 Established Technologies - Low risk, proven impact</option>
+                        </select>
+                    </div>
+
+                    <!-- Years of Experience (Dropdown) -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="years-experience" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">
+                            Years of Experience
+                        </label>
+                        <select id="years-experience" class="preference-select">
+                            <option value="">All levels (No preference)</option>
+                            <option value="0-3">0-3 years (Intern/Junior)</option>
+                            <option value="3-5">3-5 years (Junior/Mid-Level)</option>
+                            <option value="5-7">5-7 years (Senior)</option>
+                            <option value="7+">7+ years (C-Suite/Leadership)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button id="apply-preferences-btn" class="cta-button" style="flex: 1;">Apply Preferences & Filter Jobs</button>
+                        <button id="reset-preferences-btn" class="cta-button" style="flex: 0 0 auto; background: #666; border-color: #666;">Reset Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Section -->
+    <section id="chatbot" class="chatbot-section">
+        <div class="section-container">
+            <h2 class="section-title">Climate Career Counselor</h2>
+
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <p><strong>Welcome! I'm your Climate-Tech Career Counselor.</strong></p>
+                            <p>Here are some sample questions you can ask:</p>
+                            <ul>
+                                <li><strong>Learn more about industry:</strong> What does a mechanical engineer do in the hydroelectric energy sector?</li>
+                                <li><strong>Find jobs in industry:</strong> Give me a list of jobs in mineral carbon removal?</li>
+                                <li><strong>What kind of online resources:</strong> I want to get into reservoir engineering. What courses should I take?</li>
+                                <li><strong>How can I improve my skillset:</strong> To be more qualified in the energy storage field, how can I improve my skillset to be more qualified for electrical engineering job?</li>
+                            </ul>
+                            <p><em>What would you like to know about climate-tech careers?</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <form id="chat-form" class="chat-form">
+                        <input
+                            type="text"
+                            id="user-input"
+                            class="chat-input"
+                            placeholder=""
+                            autocomplete="off"
+                            required
+                        />
+                        <button type="submit" id="send-button" class="send-button">
+                            <span id="button-text">Send</span>
+                            <span id="button-loader" class="loader hidden">⏳</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Browse by Major Section -->
+    <section id="majors" class="majors-section" style="padding: 2rem 0; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+        <div class="section-container">
+            <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: 0.5rem;">Browse by Academic Major</h2>
+            <p class="section-subtitle" style="font-size: 1rem; margin-bottom: 1.5rem;">Select your major to discover tailored climate-tech opportunities</p>
+
+            <div class="major-selector-container">
+                <div class="major-selector-wrapper">
+                    <label for="major-dropdown" class="major-label">Choose Your Major:</label>
+                    <select id="major-dropdown" class="major-dropdown">
+                        <option value="">-- Select a Major --</option>
+                        <optgroup label="Engineering">
+                            <option value="major-aerospace-engineering.html">🚀 Aerospace Engineering</option>
+                            <option value="major-bioengineering-biomedical-engineering.html">🧬 Bioengineering / Biomedical Engineering</option>
+                            <option value="major-chemical-engineering.html">🧪 Chemical Engineering</option>
+                            <option value="major-civil-engineering.html">🏗️ Civil Engineering</option>
+                            <option value="major-computational-science-engineering.html">💻 Computational Science & Engineering</option>
+                            <option value="major-electrical-engineering.html">⚡ Electrical Engineering</option>
+                            <option value="major-energy-science-engineering.html">🔋 Energy Science & Engineering</option>
+                            <option value="major-environmental-engineering.html">🌿 Environmental Engineering</option>
+                            <option value="major-industrial-systems-engineering.html">🏭 Industrial & Systems Engineering</option>
+                            <option value="major-management-science-engineering.html">📊 Management Science & Engineering</option>
+                            <option value="major-materials-science-engineering.html">🔬 Materials Science & Engineering</option>
+                            <option value="major-mechanical-engineering.html">⚙️ Mechanical Engineering</option>
+                            <option value="major-mining-geological-engineering.html">⛏️ Mining & Geological Engineering</option>
+                            <option value="major-nuclear-engineering.html">☢️ Nuclear Engineering</option>
+                            <option value="major-renewable-energy-engineering.html">🌞 Renewable Energy Engineering</option>
+                        </optgroup>
+                        <optgroup label="Computer Science & Data">
+                            <option value="major-computer-science.html">💻 Computer Science</option>
+                            <option value="major-data-science-machine-learning.html">📊 Data Science & Machine Learning</option>
+                            <option value="major-information-systems-it.html">💾 Information Systems & IT</option>
+                        </optgroup>
+                        <optgroup label="Natural Sciences">
+                            <option value="major-atmospheric-science-meteorology.html">🌤️ Atmospheric Science & Meteorology</option>
+                            <option value="major-biology-biochemistry.html">🧬 Biology & Biochemistry</option>
+                            <option value="major-chemistry.html">🧪 Chemistry</option>
+                            <option value="major-earth-planetary-sciences.html">🌍 Earth & Planetary Sciences</option>
+                            <option value="major-earth-system-science.html">🌎 Earth System Science</option>
+                            <option value="major-ecology-conservation-biology.html">🌿 Ecology & Conservation Biology</option>
+                            <option value="major-oceanography-marine-science.html">🌊 Oceanography & Marine Science</option>
+                            <option value="major-physics.html">⚛️ Physics</option>
+                            <option value="major-engineering-physics.html">🔭 Engineering Physics</option>
+                        </optgroup>
+                        <optgroup label="Environmental & Sustainability">
+                            <option value="major-climate-system-science-engineering.html">🌡️ Climate System Science & Engineering</option>
+                            <option value="major-environmental-science.html">🌍 Environmental Science</option>
+                            <option value="major-environmental-studies-policy.html">🌱 Environmental Studies & Policy</option>
+                            <option value="major-sustainability-sustainable-development.html">♻️ Sustainability & Sustainable Development</option>
+                            <option value="major-forestry-natural-resources.html">🌲 Forestry & Natural Resources</option>
+                        </optgroup>
+                        <optgroup label="Agriculture & Food">
+                            <option value="major-agricultural-science-engineering.html">🌾 Agricultural Science & Engineering</option>
+                            <option value="major-food-science-technology.html">🍎 Food Science & Technology</option>
+                        </optgroup>
+                        <optgroup label="Business & Economics">
+                            <option value="major-business-administration-management.html">💼 Business Administration & Management</option>
+                            <option value="major-economics.html">📈 Economics</option>
+                            <option value="major-finance-accounting.html">💰 Finance & Accounting</option>
+                            <option value="major-supply-chain-logistics.html">📦 Supply Chain & Logistics</option>
+                        </optgroup>
+                        <optgroup label="Policy & Social Sciences">
+                            <option value="major-public-policy-administration.html">🏛️ Public Policy & Administration</option>
+                            <option value="major-political-science-international-relations.html">🌐 Political Science & International Relations</option>
+                            <option value="major-sociology-anthropology-social-science.html">👥 Sociology, Anthropology & Social Science</option>
+                            <option value="major-law.html">⚖️ Law</option>
+                        </optgroup>
+                        <optgroup label="Health & Safety">
+                            <option value="major-public-health-epidemiology.html">🏥 Public Health & Epidemiology</option>
+                            <option value="major-occupational-health-safety.html">🛡️ Occupational Health & Safety</option>
+                        </optgroup>
+                        <optgroup label="Design & Planning">
+                            <option value="major-architecture.html">🏛️ Architecture</option>
+                            <option value="major-building-science-energy-performance.html">🏢 Building Science & Energy Performance</option>
+                            <option value="major-design-graphic-ux-ui-product.html">🎨 Design (Graphic, UX/UI, Product)</option>
+                            <option value="major-urban-regional-planning.html">🏙️ Urban & Regional Planning</option>
+                        </optgroup>
+                        <optgroup label="Geospatial & Math">
+                            <option value="major-gis-geospatial-science.html">🗺️ GIS & Geospatial Science</option>
+                            <option value="major-mathematics-applied-math.html">➗ Mathematics & Applied Math</option>
+                            <option value="major-statistics-biostatistics.html">📊 Statistics & Biostatistics</option>
+                        </optgroup>
+                        <optgroup label="Trades & Technical">
+                            <option value="major-construction-management-trades.html">🔨 Construction Management & Trades</option>
+                            <option value="major-electrical-trades-technology.html">⚡ Electrical Trades & Technology</option>
+                            <option value="major-hvac-building-trades.html">🌡️ HVAC & Building Trades</option>
+                            <option value="major-mechanical-industrial-trades.html">🔧 Mechanical & Industrial Trades</option>
+                        </optgroup>
+                        <optgroup label="Other">
+                            <option value="major-communications-journalism.html">📰 Communications & Journalism</option>
+                            <option value="major-education-teaching.html">👨‍🏫 Education & Teaching</option>
+                        </optgroup>
+                    </select>
+                    <button id="explore-major-btn" class="explore-major-btn">Explore Jobs →</button>
+                </div>
+
+                <div id="major-jobs-results" class="major-jobs-results" style="display: none; margin-top: 2rem;">
+                    <div class="results-header">
+                        <h3 id="major-results-title"></h3>
+                        <p id="major-results-count"></p>
+                    </div>
+                    <div id="major-jobs-table-container"></div>
+                </div>
+
+                <p style="text-align: center; margin-top: 2rem; color: #666;">
+                    70+ majors available | <a href="#chatbot" style="color: #2196F3; text-decoration: underline;">Or ask our Climate Career Counselor</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Browse by Climate Category Section -->
+    <section id="categories" class="categories-section" style="padding: 2rem 0; background: #ffffff;">
+        <div class="section-container">
+            <h2 class="section-title" style="font-size: 1.75rem; margin-bottom: 0.5rem;">Browse by Climate Category</h2>
+            <p class="section-subtitle" style="font-size: 1rem; margin-bottom: 1.5rem;">Explore jobs by specific climate technologies and solutions</p>
+
+            <div class="category-selector-container">
+                <div class="category-selector-wrapper">
+                    <label for="category-dropdown" class="category-label">Choose a Climate Category:</label>
+                    <select id="category-dropdown" class="category-dropdown">
+                        <option value="">-- Select a Category --</option>
+                        <optgroup label="⚡ Electricity (11 categories)">
+                            <option value="Electricity > Energy Storage > Chemical">Energy Storage > Chemical</option>
+                            <option value="Electricity > Energy Storage > Demand Response">Energy Storage > Demand Response</option>
+                            <option value="Electricity > Energy Storage > Electrochemical">Energy Storage > Electrochemical</option>
+                            <option value="Electricity > Energy Storage > Mechanical">Energy Storage > Mechanical</option>
+                            <option value="Electricity > Energy Storage > Thermal">Energy Storage > Thermal</option>
+                            <option value="Electricity > Low-Emissions Generation > Nuclear Fission">Low-Emissions Generation > Nuclear Fission</option>
+                            <option value="Electricity > Low-Emissions Generation > Nuclear Fusion">Low-Emissions Generation > Nuclear Fusion</option>
+                            <option value="Electricity > Low-Emissions Generation > Solar">Low-Emissions Generation > Solar</option>
+                            <option value="Electricity > Low-Emissions Generation > Wind">Low-Emissions Generation > Wind</option>
+                            <option value="Electricity > Transmission & Distribution > Advanced Conductors">Transmission & Distribution > Advanced Conductors</option>
+                            <option value="Electricity > Transmission & Distribution > Smart Grid">Transmission & Distribution > Smart Grid</option>
+                        </optgroup>
+                        <optgroup label="🏭 Manufacturing (8 categories)">
+                            <option value="Manufacturing > Chemicals & Plastics > Hydrogen Production">Chemicals & Plastics > Hydrogen Production</option>
+                            <option value="Manufacturing > Clean Cement > Low-Clinker Concrete">Clean Cement > Low-Clinker Concrete</option>
+                            <option value="Manufacturing > Clean Steel > H2-Based Reduction">Clean Steel > H2-Based Reduction</option>
+                            <option value="Manufacturing > Cross-Cutting > CCUS">Cross-Cutting > CCUS</option>
+                            <option value="Manufacturing > Cross-Cutting > Industrial Heat">Cross-Cutting > Industrial Heat</option>
+                            <option value="Manufacturing > Cross-Cutting > Mining">Cross-Cutting > Mining</option>
+                            <option value="Manufacturing > Cross-Cutting > Waste & Recycling">Cross-Cutting > Waste & Recycling</option>
+                            <option value="Manufacturing > Fashion & Textiles > Alternative Fibers">Fashion & Textiles > Alternative Fibers</option>
+                        </optgroup>
+                        <optgroup label="🚗 Transportation (6 categories)">
+                            <option value="Transportation > Efficiency & Reduced Demand > Lightweighting">Efficiency & Reduced Demand > Lightweighting</option>
+                            <option value="Transportation > Efficiency & Reduced Demand > Public Transit">Efficiency & Reduced Demand > Public Transit</option>
+                            <option value="Transportation > Sustainable Fuels > Alternative Fuel Production">Sustainable Fuels > Alternative Fuel Production</option>
+                            <option value="Transportation > Sustainable Fuels > Scalable Biofuels">Sustainable Fuels > Scalable Biofuels</option>
+                            <option value="Transportation > Vehicle Electrification > Battery Performance">Vehicle Electrification > Battery Performance</option>
+                            <option value="Transportation > Vehicle Electrification > Flexible EV Charging">Vehicle Electrification > Flexible EV Charging</option>
+                        </optgroup>
+                        <optgroup label="🌾 Food & Agriculture (6 categories)">
+                            <option value="Food & Agriculture > Nature-Based Solutions > Ecosystem Monitoring">Nature-Based Solutions > Ecosystem Monitoring</option>
+                            <option value="Food & Agriculture > Nature-Based Solutions > Reforestation">Nature-Based Solutions > Reforestation</option>
+                            <option value="Food & Agriculture > Sustainable Crops > Precision Agriculture">Sustainable Crops > Precision Agriculture</option>
+                            <option value="Food & Agriculture > Sustainable Crops > Regenerative Agriculture">Sustainable Crops > Regenerative Agriculture</option>
+                            <option value="Food & Agriculture > Sustainable Crops > Seed Editing & Breeding">Sustainable Crops > Seed Editing & Breeding</option>
+                            <option value="Food & Agriculture > Wildfire > Prevention & Suppression">Wildfire > Prevention & Suppression</option>
+                        </optgroup>
+                        <optgroup label="🏢 Buildings (5 categories)">
+                            <option value="Buildings > End-of-Life > Circular Building Systems">End-of-Life > Circular Building Systems</option>
+                            <option value="Buildings > Operational Efficiency > Appliances">Operational Efficiency > Appliances</option>
+                            <option value="Buildings > Operational Efficiency > Heating & Cooling">Operational Efficiency > Heating & Cooling</option>
+                            <option value="Buildings > Operational Efficiency > Smart Buildings">Operational Efficiency > Smart Buildings</option>
+                            <option value="Buildings > Sustainable Construction > Green Materials">Sustainable Construction > Green Materials</option>
+                        </optgroup>
+                        <optgroup label="💨 GHG Removal (4 categories)">
+                            <option value="GHG Removal > Biological > Biomass Utilization">Biological > Biomass Utilization</option>
+                            <option value="GHG Removal > Biological > Reforestation">Biological > Reforestation</option>
+                            <option value="GHG Removal > Engineered > Carbon Storage">Engineered > Carbon Storage</option>
+                            <option value="GHG Removal > Engineered > Direct Air Capture">Engineered > Direct Air Capture</option>
+                        </optgroup>
+                        <optgroup label="📊 Climate Data & Software (3 categories)">
+                            <option value="Climate Data & Software > Climate Analytics">Climate Analytics</option>
+                            <option value="Climate Data & Software > MRV">MRV (Monitoring, Reporting, Verification)</option>
+                            <option value="Climate Data & Software > Remote Sensing">Remote Sensing</option>
+                        </optgroup>
+                        <optgroup label="💰 Climate Finance (2 categories)">
+                            <option value="Climate Finance > Carbon Markets">Carbon Markets</option>
+                            <option value="Climate Finance > Green Finance">Green Finance</option>
+                        </optgroup>
+                        <optgroup label="🏛️ Policy & Advocacy (1 category)">
+                            <option value="Policy & Advocacy > Environmental Policy">Environmental Policy</option>
+                        </optgroup>
+                        <optgroup label="📦 Supply Chain (1 category)">
+                            <option value="Supply Chain > Logistics Optimization">Logistics Optimization</option>
+                        </optgroup>
+                    </select>
+                    <button id="show-category-jobs-btn" class="show-category-jobs-btn">Show Jobs →</button>
+                </div>
+
+                <div id="category-jobs-results" class="category-jobs-results" style="display: none;">
+                    <div class="results-header">
+                        <h3 id="results-title"></h3>
+                        <p id="results-count"></p>
+                    </div>
+                    <div id="jobs-table-container"></div>
+                </div>
+
+                <p style="text-align: center; margin-top: 2rem; color: #666;">
+                    47 climate categories available | <a href="#chatbot" style="color: #2196F3; text-decoration: underline;">Or ask our Climate Career Counselor</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Climate Sectors Section -->
+    <section id="sectors" class="sectors">
+        <div class="section-container">
+            <h2 class="section-title">Explore 6 Climate-Tech Sectors</h2>
+            <p class="section-subtitle">Based on the Climate Tech Map framework - discover where your skills can make the biggest impact</p>
+
+            <div class="sectors-grid">
+                <div class="sector-card">
+                    <div class="sector-icon">🏢</div>
+                    <h3>Buildings</h3>
+                    <p>Decarbonize the built environment through heat pumps, smart buildings, sustainable materials, and energy efficiency solutions. Buildings account for nearly 40% of global emissions.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Heat Pumps</span>
+                        <span class="tag">Smart Buildings</span>
+                        <span class="tag">Green Materials</span>
+                        <span class="tag">HVAC</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: Energy Engineer, Building Systems Analyst, HVAC Specialist</div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-icon">🏭</div>
+                    <h3>Manufacturing</h3>
+                    <p>Transform hard-to-abate industries like cement, steel, and chemicals with green hydrogen, industrial electrification, and innovative production methods.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Green Hydrogen</span>
+                        <span class="tag">Clean Steel</span>
+                        <span class="tag">Low-Carbon Cement</span>
+                        <span class="tag">Circular Economy</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: Process Engineer, Industrial Decarbonization Specialist</div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-icon">🚗</div>
+                    <h3>Transportation</h3>
+                    <p>Electrify mobility with EVs, develop sustainable aviation fuels, and innovate hydrogen solutions for heavy-duty transport. Transportation represents 27% of global emissions.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Electric Vehicles</span>
+                        <span class="tag">SAF</span>
+                        <span class="tag">Hydrogen</span>
+                        <span class="tag">Maritime</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: EV Engineer, Battery Specialist, Mobility Analyst</div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-icon">🌾</div>
+                    <h3>Food, Agriculture & Nature</h3>
+                    <p>Reduce agricultural emissions through regenerative farming, methane reduction technologies, and nature-based solutions like reforestation and soil carbon sequestration.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Regenerative Ag</span>
+                        <span class="tag">Methane Reduction</span>
+                        <span class="tag">Reforestation</span>
+                        <span class="tag">Soil Carbon</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: AgTech Specialist, Carbon Project Manager, Ecologist</div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-icon">⚡</div>
+                    <h3>Electricity</h3>
+                    <p>Scale renewable energy, deploy grid-scale storage, and modernize infrastructure for a carbon-free power system. The foundation of all decarbonization efforts.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Solar & Wind</span>
+                        <span class="tag">Grid Storage</span>
+                        <span class="tag">Smart Grid</span>
+                        <span class="tag">Batteries</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: Renewable Energy Engineer, Grid Analyst, Storage Expert</div>
+                </div>
+
+                <div class="sector-card">
+                    <div class="sector-icon">💨</div>
+                    <h3>GHG Removal</h3>
+                    <p>Deploy carbon removal technologies including direct air capture, biochar, enhanced weathering, and nature-based sequestration to achieve net-negative emissions.</p>
+                    <div class="sector-tags">
+                        <span class="tag">Direct Air Capture</span>
+                        <span class="tag">Biochar</span>
+                        <span class="tag">Blue Carbon</span>
+                        <span class="tag">BECCS</span>
+                    </div>
+                    <div class="sector-jobs">Key roles: Carbon Removal Scientist, DAC Engineer, Climate Analyst</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="section-container">
+            <h2 class="section-title">About Eco-Match</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Mission</h3>
+                    <p>We connect talented professionals with meaningful careers in climate technology. Our platform aggregates over 1000 opportunities across 80+ climate subsectors—ranging from ocean carbon capture to insect-based alternative proteins and fats—leveraging data from leading climate-tech companies and the Climate Tech Map framework.</p>
+
+                    <h3>Founders</h3>
+                    <p>Eco-Match was founded by Martin, Grant, and Aarush — a team of entrepreneurs from Stanford who experienced firsthand the challenge of searching for climate-tech jobs. Without a structured way to explore the space, navigating the landscape of climate careers felt overwhelming and fragmented. That frustration became our inspiration: we built Eco-Match to give students searching for internships, professionals looking to pivot into sustainability, and anyone passionate about climate action the clarity and tools we wished we had.</p>
+
+                    <h3>Why Climate Tech Matters</h3>
+                    <p>The climate crisis is the defining challenge of our generation. Climate tech companies are building the solutions we need to decarbonize our economy - from renewable energy and electric vehicles to carbon removal and sustainable agriculture. These aren't just jobs; they're opportunities to work on humanity's most important challenge.</p>
+
+                    <h3>How It Works</h3>
+                    <p>Our AI-powered career counselor uses Google Gemini to match your skills, experience, and interests with relevant climate-tech opportunities. We track 41 key skills, 17 work areas, and opportunities across all experience levels - from internships to executive positions.</p>
+                </div>
+
+                <div class="stats-box">
+                    <h3>Platform Statistics</h3>
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <strong>1000+</strong> Active job listings updated regularly
+                        </div>
+                        <div class="stat-item">
+                            <strong>100+</strong> Leading climate-tech companies
+                        </div>
+                        <div class="stat-item">
+                            <strong>80+</strong> Climate subsectors from ocean carbon capture to insect-based proteins
+                        </div>
+                        <div class="stat-item">
+                            <strong>70+</strong> Applicable college majors
+                        </div>
+                        <div class="stat-item">
+                            <strong>All</strong> Experience levels from entry to executive
+                        </div>
+                        <div class="stat-item">
+                            <strong>100+</strong> Locations including remote opportunities
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-source">
+                <p>Data framework sourced from <a href="https://climatetechmap.com" target="_blank">Climate Tech Map</a> - a collaborative initiative by Breakthrough Energy, Stanford Doerr School of Sustainability, and McKinsey</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-main">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><img src="logo.png" alt="Eco-Match" style="height: 24px; vertical-align: middle; margin-right: 0.4rem;">Eco-Match</h4>
+                <p>Connecting talent with climate impact opportunities worldwide.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#sectors">Explore Sectors</a>
+                <a href="#chatbot">Find Jobs</a>
+                <a href="#about">About Us</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="https://climatetechmap.com" target="_blank">Climate Tech Map</a>
+                <a href="https://aistudio.google.com" target="_blank">Google Gemini AI</a>
+                <a href="https://www.breakthroughenergy.org" target="_blank">Breakthrough Energy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Eco-Match. Built for a sustainable future. Powered by Google Gemini AI.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
